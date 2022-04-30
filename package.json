@@ -7,6 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^5.0.1",
+    "expect": "^28.0.2",
     "jest-haste-map": "^28.0.2",
     "jest-worker": "^28.0.2"
   }
