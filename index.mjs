@@ -1,8 +1,9 @@
 import Haste from 'jest-haste-map'
-import { dirname, join } from 'path'
+import { dirname, join, relative } from 'path'
 import { fileURLToPath } from 'url'
 import { cpus } from 'os'
 import { Worker } from 'jest-worker'
+import chalk from 'chalk'
 
 // this is __dirname in an .mjs file
 const root = dirname(fileURLToPath(import.meta.url))
@@ -24,7 +25,14 @@ const worker = new Worker(join(root, 'worker.js'), {
 })
 
 for await (const testFile of testFiles) {
-  console.log(await worker.runTest(testFile))
+  const { success, errorMessage } = await worker.runTest(testFile)
+  const status = success
+    ? chalk.green.inverse(' PASS ')
+    : chalk.red.inverse(' FAIL ')
+  console.log(status + ' ' + chalk.dim(relative(testFile)))
+  if (!success) {
+    console.log(errorMessage)
+  }
 }
 
 worker.end()

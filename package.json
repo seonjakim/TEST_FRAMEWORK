@@ -6,6 +6,7 @@
   "author": "<seonja.kim0@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^5.0.1",
     "jest-haste-map": "^28.0.2",
     "jest-worker": "^28.0.2"
   }
