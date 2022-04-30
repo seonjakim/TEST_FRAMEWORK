@@ -1,6 +1,7 @@
 const fs = require('fs')
 const expect = require('expect')
 const mock = require('jest-mock')
+const { describe, it, run } = require('jest-circus')
 
 exports.runTest = async (testFile) => {
   const code = await fs.promises.readFile(testFile, 'utf8')
@@ -9,7 +10,7 @@ exports.runTest = async (testFile) => {
     success: false,
     errorMessage: null,
   }
-  let testName = ''
+  // let testName = ''
   try {
     // can build expect like this below
     // const expect = (received) => ({
@@ -46,21 +47,23 @@ exports.runTest = async (testFile) => {
     //   },
     // }
 
-    const describeFns = []
-    let currentDescribeFn
-    const describe = (name, fn) => describeFns.push([name, fn])
-    const it = (name, fn) => currentDescribeFn.push([name, fn])
+    // const describeFns = []
+    // let currentDescribeFn
+    // const describe = (name, fn) => describeFns.push([name, fn])
+    // const it = (name, fn) => currentDescribeFn.push([name, fn])
     eval(code)
-    for (const [name, fn] of describeFns) {
-      currentDescribeFn = []
-      testName = name
-      fn()
-      for (const [itName, itFn] of currentDescribeFn) {
-        testName += ` + ${itName}`
-        itFn()
-      }
-    }
-    testResult.success = true
+    const { testResults } = await run()
+    testResult.testResults = testResults
+    testResult.success = testResults.every((result) => !result.errors.length)
+    // for (const [name, fn] of describeFns) {
+    //   currentDescribeFn = []
+    //   testName = name
+    //   fn()
+    //   for (const [itName, itFn] of currentDescribeFn) {
+    //     testName += ` + ${itName}`
+    //     itFn()
+    //   }
+    // }
   } catch (error) {
     testResult.errorMessage = error.message
   }
