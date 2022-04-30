@@ -17,4 +17,10 @@ const hasteMap = new Haste.default({
 const { hasteFS } = await hasteMap.build()
 
 const testFiles = hasteFS.matchFilesWithGlob(['**/*.test.js'])
-console.log(testFiles)
+
+import fs from 'fs'
+
+for await (const testFile of testFiles) {
+  const code = await fs.promises.readFile(testFile, 'utf8')
+  console.log(code)
+}
