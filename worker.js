@@ -16,6 +16,17 @@ exports.runTest = async (testFile) => {
     //       throw new Error(`Expected ${expected} but received ${received}`)
     //     }
     //   },
+    // toThrow: () => {
+    //   let hasThrow = false
+    //   try {
+    //     received()
+    //   } catch (error) {
+    //     hasThrow = true
+    //   }
+    //   if (!hasThrow) {
+    //     throw new Error(`It did't throw.`)
+    //   }
+    // }
     // })
     eval(code)
     testResult.success = true
