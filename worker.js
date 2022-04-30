@@ -9,6 +9,7 @@ exports.runTest = async (testFile) => {
     success: false,
     errorMessage: null,
   }
+  let testName = ''
   try {
     // can build expect like this below
     // const expect = (received) => ({
@@ -44,7 +45,21 @@ exports.runTest = async (testFile) => {
     //     return mockFn
     //   },
     // }
+
+    const describeFns = []
+    let currentDescribeFn
+    const describe = (name, fn) => describeFns.push([name, fn])
+    const it = (name, fn) => currentDescribeFn.push([name, fn])
     eval(code)
+    for (const [name, fn] of describeFns) {
+      currentDescribeFn = []
+      testName = name
+      fn()
+      for (const [itName, itFn] of currentDescribeFn) {
+        testName += ` + ${itName}`
+        itFn()
+      }
+    }
     testResult.success = true
   } catch (error) {
     testResult.errorMessage = error.message
