@@ -23,7 +23,7 @@ const testFiles = hasteFS.matchFilesWithGlob(['**/*.test.js'])
 const worker = new Worker(join(root, 'worker.js'), {
   enableWorkerThreads: true,
 })
-
+let hasFailed = false
 for await (const testFile of testFiles) {
   const { success, errorMessage } = await worker.runTest(testFile)
   const status = success
@@ -31,8 +31,14 @@ for await (const testFile of testFiles) {
     : chalk.red.inverse(' FAIL ')
   console.log(status + ' ' + chalk.dim(relative(testFile)))
   if (!success) {
+    hasFailed = true
     console.log(errorMessage)
   }
 }
 
 worker.end()
+
+if (hasFailed) {
+  console.log(chalk.red.bold(`the test run failed`))
+  process.exitCode = 1
+}

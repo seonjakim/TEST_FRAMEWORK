@@ -28,6 +28,21 @@ exports.runTest = async (testFile) => {
     //   }
     // }
     // })
+
+    const mock = {
+      fn: (implementation) => {
+        const mockFn = () => {
+          mockFn.mock.calls.push([])
+          implementation?.()
+        }
+        mockFn._isMockFunction = true
+        mockFn.getMockName = () => 'mockFn'
+        mockFn.mock = {}
+        mockFn.mock.calls = []
+        mockFn.mock.calls.count = () => mockFn.mock.calls.length
+        return mockFn
+      },
+    }
     eval(code)
     testResult.success = true
   } catch (error) {
