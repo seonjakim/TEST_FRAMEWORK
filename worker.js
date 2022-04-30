@@ -1,5 +1,6 @@
 const fs = require('fs')
 const expect = require('expect')
+const mock = require('jest-mock')
 
 exports.runTest = async (testFile) => {
   const code = await fs.promises.readFile(testFile, 'utf8')
@@ -29,20 +30,20 @@ exports.runTest = async (testFile) => {
     // }
     // })
 
-    const mock = {
-      fn: (implementation) => {
-        const mockFn = () => {
-          mockFn.mock.calls.push([])
-          implementation?.()
-        }
-        mockFn._isMockFunction = true
-        mockFn.getMockName = () => 'mockFn'
-        mockFn.mock = {}
-        mockFn.mock.calls = []
-        mockFn.mock.calls.count = () => mockFn.mock.calls.length
-        return mockFn
-      },
-    }
+    // const mock = {
+    //   fn: (implementation) => {
+    //     const mockFn = () => {
+    //       mockFn.mock.calls.push([])
+    //       implementation?.()
+    //     }
+    //     mockFn._isMockFunction = true
+    //     mockFn.getMockName = () => 'mockFn'
+    //     mockFn.mock = {}
+    //     mockFn.mock.calls = []
+    //     mockFn.mock.calls.count = () => mockFn.mock.calls.length
+    //     return mockFn
+    //   },
+    // }
     eval(code)
     testResult.success = true
   } catch (error) {
